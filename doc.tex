@@ -1,0 +1,63 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage{color}
+%% Replace serif font with (postscript) helvetica
+%\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+\setlength{\textwidth}{160mm}
+\setlength{\oddsidemargin}{0mm}
+\setlength{\evensidemargin}{0mm}
+\setlength{\textheight}{250mm}
+\setlength{\voffset}{-20mm}
+%\usepackage{showframe}
+\usepackage{xspace}
+%\usepackage{pgffor}
+
+
+\usepackage{xspace}
+%%%  A pretty minted-environment for Python  %%%
+\usepackage{minted}
+\usemintedstyle{colorful}
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\definecolor{bg_shell}{rgb}{0.95,0.95,1.00}
+\newminted[python]{python}{bgcolor=bg, frame=lines}
+\newminted[pythonBEG]{python}{bgcolor=bg, frame=topline}
+\newminted[pythonMID]{python}{bgcolor=bg}
+\newminted[pythonEND]{python}{bgcolor=bg, frame=bottomline}
+\newminted[shell]{bash}{bgcolor=bg_shell, frame=lines}
+
+
+
+\begin{document}
+
+
+%\includeonly{urd}
+
+%\include{xmtitle}
+%\thispagestyle{empty}
+%\begin{document}
+%\titleLL
+\newpage
+
+
+%\tableofcontents
+
+
+
+\section{Introduction}
+
+This document covers installation...
+
+\begin{shell}
+  ls -lrt /bin
+\end{shell}
+
+\section{gzutil}
+\section{accelerator}
+\section{urd}
+
+
+\end{document}
+
+
