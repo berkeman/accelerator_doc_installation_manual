@@ -1,0 +1,9 @@
+_minted-doc/
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.pdf
+*~
+*#
+gitrevision
