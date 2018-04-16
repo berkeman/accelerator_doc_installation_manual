@@ -3,7 +3,7 @@
 \usepackage{color}
 %% Replace serif font with (postscript) helvetica
 %\usepackage[scaled]{helvet}
-\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+%\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
 \usepackage[T1]{fontenc}
 \setlength{\textwidth}{160mm}
 \setlength{\oddsidemargin}{0mm}
@@ -17,8 +17,8 @@
 
 \usepackage{xspace}
 %%%  A pretty minted-environment for Python  %%%
-\usepackage{minted}
-\usemintedstyle{colorful}
+\usepackage{minted, xcolor}
+%\usemintedstyle{colorful}
 \definecolor{bg}{rgb}{0.97,0.97,0.95}
 \definecolor{bg_shell}{rgb}{0.95,0.95,1.00}
 \newminted[python]{python}{bgcolor=bg, frame=lines}
@@ -28,12 +28,14 @@
 \newminted[shellBEG]{text}{bgcolor=bg_shell, frame=topline}
 \newminted[shellMID]{text}{bgcolor=bg_shell}
 \newminted[shellEND]{text}{bgcolor=bg_shell, frame=bottomline}
-\newminted[shell]{text}{bgcolor=bg_shell, frame=lines}
+
+\newminted[shell]{text}{bgcolor=bg_shell}
+
 \newminted[text]{text}{bgcolor=bg, frame=lines}
 \newminted[conf]{bash}{bgcolor=bg, frame=lines}
 
 
-\title{\vspace{-0.5cm}Expertmaker Accelerator Detailed Installation Manual\vspace{-0.5cm}}
+\title{\vspace{-0.5cm}Expertmaker Accelerator Installation Manual\vspace{-0.5cm}}
 \date{}
 
 \begin{document}
@@ -41,186 +43,74 @@
 
 \section{Introduction}
 
-This document covers installation of the Accelerator on a single
-computer instance.  Due to its small footprint and efficient design,
-the Accelerator will run on anything from a small laptop to a large
-multi-CPU rack server.  It is assumed that the computer is running
-Ubuntu~16.04~LTS, but the Accelerator will run without difficulties on
-many other Linuxes as well as FreeBSD.  (In fact, most of the
-development work is carried out on FreeBSD boxes.)
+This document covers installation of the Accelerator.  The Accelerator
+will run on anything from a small laptop to a large multi-CPU rack
+server.  In this manual, it is assumed that the computer is running
+Ubuntu~16.04~LTS or Debian 9, but the Accelerator will run on many
+other Linuxes as well as FreeBSD.  (Most of the development work has
+been carried out on FreeBSD.)
 
 The Accelerator is typically not installed ``system-wide''.  Instead,
 it is instantiated as part of a project.  This manual describes how to
 set up an empty project ``skeleton'', where the Accelerator is
-included.  The last section is devoted to a simple run-test of the
-installation.
+included.
 
-For those who just need a quick reminder or like to figure things out
-by themselves, section~\ref{sec:quick} provides a minimalistic
-instruction.  A more comprehensive guide is found in
-section~\ref{sec:holdhand}.
-
+%For those who just need a quick reminder or like to figure things out
+%by themselves, section~\ref{sec:quick} provides a minimalistic
+%instruction.  A more comprehensive guide is found in
+%section~\ref{sec:holdhand}.
 
 
-\section{Quick Setup}
+
+\section{Installation}
 \label{sec:quick}
 This will install an Accelerator project skeleton on a machine running
-Ubuntu~16.04.
-\\
+Ubuntu~16.04 or Debian 9.
 \begin{shell}
-  sudo apt-get install python-ujson python3-ujson python-cffi python-numpy
-  git clone git@github.corp.ebay.com:cdrougge/accelerator_project_skeleton.git
-  cd accelerator_project_skeleton
-  git submodule init
-  git submodule update
-  mkdir -p ~/workdirs/test
+sudo apt-get install build-essential python-dev python3-dev zlib1g-dev git virtualenv
+
+git clone https://github.com/drougge/accelerator_project_skeleton.git
+
+cd accelerator_project_skeleton
+
+./init.py
 \end{shell}
-\\ The next step is then to edit the configuration file
+The next step is to edit the configuration file
 \texttt{conf/framework.conf} and change it to reflect the desired
-setup.  Done.
-
-
-
-\section{Detailed Setup}
-\label{sec:holdhand}
-This section provides setup instructions with more detailed comments.
-
-\subsection{Dependencies}
-The Accelerator relies on a few packages not installed by default in
-Ubuntu~16.04.  These packages may be installed by issuing
-\\
+setup.  The default configuration file assumes that some directories
+exists, so if the file left unchanged, create these directories by
 \begin{shell}
-  sudo apt-get install python-ujson python3-ujson python-cffi python-numpy
+mkdir -p ~/accelerator/workdirs/TEST
 \end{shell}
-\\
-This should be sufficient for Ubuntu~16.04.  Other distributions
-may require other packages, such as \texttt{python-dev} and
-\texttt{zlib1g-dev}.
-
-
-\subsection{A New Accelerator Project}
-First, check out an empty project skeleton from the repository
-\\
-\begin{shellBEG}
-  git clone <location>/accelerator_project_skeleton.git
-\end{shellBEG}
-\\
-and \texttt{cd} down into the directory
-\\
-\begin{shellMID}
-  cd accelerator_project_skeleton
-\end{shellMID}
-\\
-The Accelerator itself is included as a git submodule.  Git submodules
-are initiated by issuing
-\\
-\begin{shellMID}
-  git submodule init
-\end{shellMID}
-\\
-This will print which repository the Accelerator code will be cloned
-from, and
-\\
-\begin{shellEND}
-  git submodule update
-\end{shellEND}
-\\
-will actually clone the Accelerator repository into the directory
-\texttt{accelerator}.
-
-\noindent Make sure this is the case.
-\\
+The Accelerator daemon is then started from inside the
+\texttt{accelerator} directory like this
 \begin{shell}
-  ls -l
+cd accelerator
+./daemon.py  
 \end{shell}
-\\
-will show three directories like this
-\\
-\begin{text}
-drwxrwxr-x 8 ab ab 4096 dec  8 15:35 accelerator
-drwxrwxr-x 3 ab ab 4096 dec  9 15:44 analysis
-drwxrwxr-x 2 ab ab 4096 dec  9 15:03 conf
-\end{text}
-\\
-Here, \texttt{accelerator},
-holds the Accelerator code, \texttt{conf} holds the
-configuration files, and \texttt{analysis} is the default location for
-user designed methods in the project.
-
-The setup provides independent source control of the Accelerator code
-base and the project using it.  Since submodule commit states may be
-committed into the base repository, it is possible to keep track of
-which version of the Accelerator that was used at any given
-(committed) state of a project.
-
-
-\subsection{A Workdir}
-
-The next step is to create a workdir.  This is the directory where all
-job data and results are stored.
-\\
-\begin{shell}
-  mkdir -p ~/workdirs/test
-\end{shell}
-\\
-This location is fine for simple testing and is consistent with the
-supplied configuration file.  In general, workdirs may be located
-anywhere in the file system.
-
-\subsection{The Configuration File}
-
-A configuration file is supplied in the skeleton repository, and it
-may be used without changes.  The file specifies, among other things,
-where in the file system the Accelerator is allowed to write, so it is
-a good idea to have a look at it.
-\\
-\begin{shell}
-  cat conf/framework.conf
-\end{shell}
+The first time the Accelerator is run, it will compile some functions
+written in the C programming language.  On some systems, this process
+may generate a few warnings, but that is okay.  Setup is now complete.
+\thispagestyle{empty}
 
 
 
-\begin{conf}
-# Define a workdir named "test" with 17 slices.  Each slice will use
-# one CPU core, so adjust according to target platform capability.
-workspace=test:${HOME}/workdirs/test:17
+\section{Overview of the Installation}
+The Accelerator project skeleton will setup virtual environments for
+Python2 and Python3.  It will \texttt{git clone} the
+\texttt{accelerator-gzutil} library and install in these virtual
+environments.  The Accelerator itself is \texttt{git clone}d into a
+git submodule in the \texttt{accelerator} directory.
 
-# You can only have one main workspace.
-# All built jobs end up there.
-main_workspace=test
-
-# Methods are imported from these directories (comma separated)
-method_directories=analysis,default_analysis
-
-# daemon log
-logfilename=${HOME}/daemon.log
-
-# python versions to use
-# (the left side here is what you put on the right side in methods.conf)
-py2=/usr/bin/python2.7
-py3=/usr/bin/python3.5
-\end{conf}
-\\
-The \texttt{method\_directories}
-specify the two directories \texttt{default\_analysis}, which is where
-the Accelerator's ``built-in'' methods reside; and \texttt{analysis},
-where user created methods are located by default.
-Note that the configuration file is part of the project repository,
-and thus independent of the accelerator.
-
-\subsection{Trying it Out}
-The Accelerator daemon is always executed from the
-\texttt{accelerator} directory
-\\
-\begin{shell}
-  cd accelerator
-  ./daemon.py
-\end{shell}
-\\
-If everything went well, the daemon should now start.  Setup is now
-complete.
+The default configuration file is located in
+\texttt{conf/framework.conf}.  This file is used to specify workdirs,
+method directories, and more.  For more information, see the
+Accelerator User's Reference Manual.
 
 
+\section*{References}
+
+\texttt{https://berkeman.github.io/accelerator\_doc\_users\_reference/accelerator\_manual.pdf}
 
 
 
