@@ -1,9 +1,5 @@
 \documentclass[a4paper]{article}
 \usepackage{graphicx}
-\usepackage{color}
-%% Replace serif font with (postscript) helvetica
-%\usepackage[scaled]{helvet}
-%\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
 \usepackage[T1]{fontenc}
 \setlength{\textwidth}{160mm}
 \setlength{\oddsidemargin}{0mm}
@@ -12,32 +8,15 @@
 \setlength{\voffset}{-20mm}
 %\usepackage{showframe}
 \usepackage{xspace}
-%\usepackage{pgffor}
-
-
-\usepackage{xspace}
-%%%  A pretty minted-environment for Python  %%%
 \usepackage{minted, xcolor}
-%\usemintedstyle{colorful}
 \definecolor{bg}{rgb}{0.97,0.97,0.95}
 \definecolor{bg_shell}{rgb}{0.95,0.95,1.00}
-\newminted[python]{python}{bgcolor=bg, frame=lines}
-\newminted[pythonBEG]{python}{bgcolor=bg, frame=topline}
-\newminted[pythonMID]{python}{bgcolor=bg}
-\newminted[pythonEND]{python}{bgcolor=bg, frame=bottomline}
-\newminted[shellBEG]{text}{bgcolor=bg_shell, frame=topline}
-\newminted[shellMID]{text}{bgcolor=bg_shell}
-\newminted[shellEND]{text}{bgcolor=bg_shell, frame=bottomline}
 
 \newminted[shell]{text}{bgcolor=bg_shell}
-
-\newminted[text]{text}{bgcolor=bg, frame=lines}
-\newminted[conf]{bash}{bgcolor=bg, frame=lines}
 
 
 \title{\vspace{-0.5cm}Expertmaker Accelerator Installation Manual\vspace{-0.5cm}}
 \date{}
-
 \begin{document}
 \maketitle
 
@@ -55,15 +34,9 @@ it is instantiated as part of a project.  This manual describes how to
 set up an empty project ``skeleton'', where the Accelerator is
 included.
 
-%For those who just need a quick reminder or like to figure things out
-%by themselves, section~\ref{sec:quick} provides a minimalistic
-%instruction.  A more comprehensive guide is found in
-%section~\ref{sec:holdhand}.
-
 
 
 \section{Installation}
-\label{sec:quick}
 This will install an Accelerator project skeleton on a machine running
 Ubuntu~16.04 or Debian 9.
 \begin{shell}
@@ -108,13 +81,9 @@ method directories, and more.  For more information, see the
 Accelerator User's Reference Manual.
 
 
+
 \section*{References}
-
 \texttt{https://berkeman.github.io/accelerator\_doc\_users\_reference/accelerator\_manual.pdf}
-
-
-
-
 
 \end{document}
 
