@@ -12,68 +12,81 @@
 \definecolor{bg}{rgb}{0.97,0.97,0.95}
 \definecolor{bg_shell}{rgb}{0.95,0.95,1.00}
 
-\newminted[shell]{text}{bgcolor=bg_shell}
+\newminted[shell]{bash}{bgcolor=bg_shell}
 
 
-\title{\vspace{-0.5cm}Expertmaker Accelerator Installation Manual\vspace{-0.5cm}}
+\title{\vspace{-20mm}Expertmaker Accelerator\\[1ex]\Large{Quick Install using the ``Project Skeleton'' Repository}}
 \date{}
 \begin{document}
 \maketitle
 
-\section{Introduction}
+\section*{Introduction and System Requirements}
+The \texttt{accelerator\_project\_skeleton} project provides a simple
+and convenient way to install the Accelerator.  This document lists
+the necessary steps to set up the Accelerator using it.
 
-This document covers installation of the Accelerator.  The Accelerator
-will run on anything from a small laptop to a large multi-CPU rack
-server.  In this manual, it is assumed that the computer is running
-Ubuntu~16.04~LTS or Debian 9, but the Accelerator will run on many
-other Linuxes as well as FreeBSD.  (Most of the development work has
-been carried out on FreeBSD.)
-
-The Accelerator is typically not installed ``system-wide''.  Instead,
-it is instantiated as part of a project.  This manual describes how to
-set up an empty project ``skeleton'', where the Accelerator is
-included.
+The Accelerator will run on almost any hardware, from small laptops to
+large multi-CPU rack servers.  It is assumed in this manual that the
+computer is running Ubuntu~16.04~LTS or Debian 9.  The Accelerator
+team is actively testing on Ubuntu, Debian, and FreeBSD, but the
+Accelerator will most likely run on many other Linux distributions as well.
 
 
-
-\section{Installation}
-This will install an Accelerator project skeleton on a machine running
-Ubuntu~16.04 or Debian 9.
+\section*{Installation}
+There are three steps in the installation: resolve dependencies, clone
+repository, and run the initiation script.  These steps will be
+descibed next.
+\subsection*{1. Dependencies}
+The first step is to make sure that all software package dependencies
+are met.  This command will install all required packages
 \begin{shell}
 sudo apt-get install build-essential python-dev python3-dev zlib1g-dev git virtualenv
+\end{shell}
+The installer requires nothing but \texttt{git}, \texttt{virtualenv},
+and some \texttt{dev} packages in order to compile C-code.
 
+\subsection*{2. Clone Repository}
+Clone the \texttt{accelerator\_project\_skeleton} like this
+\begin{shell}
 git clone https://github.com/drougge/accelerator_project_skeleton.git
+\end{shell}
 
+\subsection*{3. Setup}
+The Accelerator will now be installed \textsl{locally without any
+administrator privileges}.  To continue, \texttt{cd} into the cloned
+directory
+\begin{shell}
 cd accelerator_project_skeleton
-
+\end{shell}
+In this directory there is a file \texttt{init.py} that performs all
+the installation steps.  It will work out-of-the-box, but for a
+customised install it is recommended to read and modify this file
+before continuing.  The next step is to run the script
+\begin{shell}
 ./init.py
 \end{shell}
-The next step is to edit the configuration file
-\texttt{conf/framework.conf} and change it to reflect the desired
-setup.  The default configuration file assumes that some directories
-exists, so if the file left unchanged, create these directories by
-\begin{shell}
-mkdir -p ~/accelerator/workdirs/TEST
-\end{shell}
-The Accelerator daemon is then started from inside the
-\texttt{accelerator} directory like this
+This script will do a complete setup, and the next section provides
+more information about the process.  After the script is finished, the
+Acclerator installation is complete.  It could be run by issuing
 \begin{shell}
 cd accelerator
 ./daemon.py  
 \end{shell}
 The first time the Accelerator is run, it will compile some functions
 written in the C programming language.  On some systems, this process
-may generate a few warnings, but that is okay.  Setup is now complete.
-\thispagestyle{empty}
+may generate a few warning messages, but that is okay.  Setup is now
+complete.  \thispagestyle{empty}
 
 
 
-\section{Overview of the Installation}
-The Accelerator project skeleton will setup virtual environments for
-Python2 and Python3.  It will \texttt{git clone} the
-\texttt{accelerator-gzutil} library and install in these virtual
-environments.  The Accelerator itself is \texttt{git clone}d into a
-git submodule in the \texttt{accelerator} directory.
+\section*{Overview of the Installation}
+The \texttt{accelerator\_project\_skeleton} script \texttt{init.py}
+will setup virtual environments for Python2 and Python3.  In these
+virtual environments, it will download and install some depending
+packages, and \texttt{git clone} and install the
+\texttt{accelerator-gzutil} library.  The Accelerator itself is
+\texttt{git clone}d into a git submodule in the \texttt{accelerator}
+directory.
 
 The default configuration file is located in
 \texttt{conf/framework.conf}.  This file is used to specify workdirs,
@@ -83,7 +96,7 @@ Accelerator User's Reference Manual.
 
 
 \section*{References}
-\texttt{https://berkeman.github.io/accelerator\_doc\_users\_reference/accelerator\_manual.pdf}
+\texttt{https://berkeman.github.io/pdf/acc\_manual.pdf}
 
 \end{document}
 
