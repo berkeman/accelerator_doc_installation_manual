@@ -9,13 +9,18 @@
 %\usepackage{showframe}
 \usepackage{xspace}
 \usepackage{minted, xcolor}
-\definecolor{bg}{rgb}{0.97,0.97,0.95}
 \definecolor{bg_shell}{rgb}{0.95,0.95,1.00}
+\definecolor{bg_shell2}{rgb}{0.95,1.00,0.95}
+\definecolor{shadecolor}{rgb}{0.96,0.96,0.96}
 
 \newminted[shell]{bash}{bgcolor=bg_shell}
+\newminted[shell2]{bash}{bgcolor=bg_shell2}
 
 
-\title{\vspace{-20mm}Expertmaker Accelerator\\[1ex]\Large{Quick Install using the ``Project Skeleton'' Repository}}
+
+\usepackage{fancyvrb}
+
+\title{\vspace{-20mm}Expertmaker Accelerator\\[1ex]\Large{Quick Install using the ``Project Skeleton'' Repository + Example}}
 \date{}
 \begin{document}
 \maketitle
@@ -35,7 +40,7 @@ Accelerator will most likely run on many other Linux distributions as well.
 \section*{Installation}
 There are three steps in the installation: resolve dependencies, clone
 repository, and run the initiation script.  These steps will be
-descibed next.
+described next.
 \subsection*{1. Dependencies}
 The first step is to make sure that all software package dependencies
 are met.  This command will install all required packages
@@ -53,21 +58,21 @@ git clone https://github.com/eBay/accelerator-project_skeleton.git
 
 \subsection*{3. Setup}
 The Accelerator will now be installed \textsl{locally without any
-administrator privileges}.  To continue, \texttt{cd} into the cloned
+  administrator privileges}.  To continue, \texttt{cd} into the cloned
 directory
 \begin{shell}
 cd accelerator-project_skeleton
 \end{shell}
 In this directory there is a file \texttt{init.py} that performs all
 the installation steps.  It will work out-of-the-box, but for a
-customised install it is recommended to read and modify this file
+customized install it is recommended to read and modify this file
 before continuing.  The next step is to run the script
 \begin{shell}
 ./init.py
 \end{shell}
 This script will do a complete setup, and the next section provides
 more information about the process.  After the script is finished, the
-Acclerator installation is complete.  It could be run by issuing
+Accelerator installation is complete.  It could be run by issuing
 \begin{shell}
 cd accelerator
 ./daemon.py  
@@ -77,7 +82,7 @@ written in the C programming language.  On some systems, this process
 may generate a few warning messages, but that is okay.  Setup is now
 complete.  \thispagestyle{empty}
 
-\section{Running \texttt{dsinfo} in the Virtual Environment}
+\section*{Accessing Libraries in the Virtual Environment}
 Since the installer uses a virtual environment for installing
 packages, it must be initiated in shells running for example
 \texttt{dsinfo}.  This is done by issuing
@@ -85,6 +90,7 @@ packages, it must be initiated in shells running for example
 source ../venv/py3/bin/activate
 \end{shell}
 from the \texttt{accelerator} directory.
+
 
 
 \section*{Overview of the Installation}
@@ -102,10 +108,193 @@ method directories, and more.  For more information, see the
 Accelerator User's Reference Manual.
 
 
-
+\vfill
 \section*{References}
 \texttt{https://berkeman.github.io/pdf/acc\_manual.pdf}
 
+
+
+\clearpage
+\section*{Example 1}
+This example shows how to create datasets and dataset chains, export
+datasets to CSV (Comma Separated Values) files, import datasets from
+CSV-files, append columns to datasets, and more.
+
+\subsection*{Running the Example}
+The example is located in the \texttt{example1} directory.  Here is a
+list of steps showing how to run it:
+
+\begin{enumerate}
+\item Clone and setup the \texttt{project\_skeleton} as described
+  earlier in this document.  Basically
+\begin{shell}
+git clone https://github.com/eBay/accelerator-project_skeleton.git
+cd accelerator-project_skeleton
+./init.py
+\end{shell}
+
+\item The example code is located in the \texttt{example1} directory.
+  In order to run the code, this directory needs to be added to the
+  \texttt{method\_directories} list in the\texttt{conf/framework.conf}
+  file, so edit the file
+  \begin{shell}
+vim conf/framework.conf
+  \end{shell}
+  and update the \texttt{method\_directories} line so it looks like this
+  \begin{Verbatim}[commandchars=\\\{\}]
+# Methods are imported from these directories (comma separated)
+method_directories=dev,standard_methods,\textsl{example1}
+  \end{Verbatim}
+
+\item The Accelerator is a client-server application.  To start the
+  server, \texttt{cd} into the \texttt{accelerator} directory and
+  start the server
+  \begin{shell}
+cd accelerator
+./daemon.py
+  \end{shell}
+
+\item Now open a second terminal emulator for the client side.  The
+  Accelerator team prefers using GNU screen, but any terminal emulator
+  like \texttt{xterm} is fine.
+
+  In this second terminal (green), \texttt{cd} to the
+  \texttt{accelerator} directory and run the build script.
+  \begin{shell2}
+cd accelerator
+./automatarunner example1
+  \end{shell2}
+\end{enumerate}
+
+
+
+\subsection*{Looking at the Output}
+The build script for this session is
+\texttt{example1/automata\_example1.py}.  Please have a look at this
+code with one eye while looking at the output with the other.  Here is the output:
+\begin{snugshade}
+\begin{Verbatim}[commandchars=\\\{\}]
+example1.automata_example1
+        -  example1_create_dataset                        DONE  TEST-0  0.4 seconds
+        -  example1_create_dataset                        DONE  TEST-1  0.4 seconds
+        -  example1_create_dataset                        DONE  TEST-2  0.5 seconds
+        -  example1_create_dataset                        DONE  TEST-3  0.4 seconds
+        -  example1_create_dataset                        DONE  TEST-4  0.4 seconds
+        -  csvexport                                      DONE  TEST-5  0.2 seconds
+\textsl{Exported file stored in "/home/ab/accelerator/workdirs/TEST/TEST-5/random.tsv"}
+\end{Verbatim}
+\end{snugshade}
+\noindent This shows that five \texttt{example1\_create\_dataset} jobs have been
+run, and their jobids are \texttt{TEST-0} to \texttt{TEST-4}.  By
+looking at the code, we see that the \texttt{csvexport} job is
+exporting the \textsl{last} (\texttt{TEST-4}) dataset to a CSV file on
+disk.  (The whole dataset chain could be exported to CVS too by simply
+changing an input parameter to \texttt{csvimport}.) The location of
+this file is printed to \texttt{stdout} as well.  Let's move on
+\begin{snugshade}
+\begin{Verbatim}[commandchars=\\\{\}]
+        -  csvimport                                      DONE  TEST-6  0.2 seconds
+        -  dataset_type                                   DONE  TEST-7  0.2 seconds
+\end{Verbatim}
+\end{snugshade}
+\noindent Here, we've \textsl{imported} the CVS-file we just created.  Note
+that an import types the data to \texttt{bytes}, so we issue an
+\texttt{dataset\_type} job that does proper typing of the data.  Next,
+\begin{snugshade}
+\begin{Verbatim}[commandchars=\\\{\}]
+        -  example1_calc_average                          DONE  TEST-8  0.0 seconds
+\textsl{Column rint:  sum=-220338.000000, length=100000, average=-2.203380}
+        -  example1_calc_average                          DONE  TEST-9  0.0 seconds
+\textsl{Column rflt:  sum=50109.285978, length=100000, average=0.501093}
+\end{Verbatim}
+\end{snugshade}
+\noindent there is a loop iterating over the columns of the dataset in
+\texttt{TEST-7}.  In each iteration, it will compute the average of
+the values of the column and print it to \texttt{stdout}.  Finally,
+\begin{snugshade}
+\begin{Verbatim}[commandchars=\\\{\}]
+        -  example1_add_column                            DONE  TEST-10  0.2 seconds
+        -  csvexport                                      DONE  TEST-11  0.3 seconds
+\end{Verbatim}
+\end{snugshade}
+\noindent appends a new column to the \texttt{TEST-7} dataset.  This
+dataset is then exported to a CSV file.  Which labels to export is
+explicitly set in this case.  The build script then prints out a
+pretty-printed version of what is in the current Urd list
+\begin{snugshade}
+\begin{Verbatim}[commandchars=\\\{\}]
+\textsl{JobList(}
+\textsl{   [  0]      Created_number_0 : TEST-0}
+\textsl{   [  1]      Created_number_1 : TEST-1}
+\textsl{   [  2]      Created_number_2 : TEST-2}
+\textsl{   [  3]      Created_number_3 : TEST-3}
+\textsl{   [  4]      Created_number_4 : TEST-4}
+\textsl{   [  5]             csvexport : TEST-5}
+\textsl{   [  6]             csvimport : TEST-6}
+\textsl{   [  7]          dataset_type : TEST-7}
+\textsl{   [  8] example1_calc_average : TEST-8}
+\textsl{   [  9] example1_calc_average : TEST-9}
+\textsl{   [ 10]   example1_add_column : TEST-10}
+\textsl{   [ 11]             csvexport : TEST-11}
+\textsl{)}
+\end{Verbatim}
+\end{snugshade}
+\noindent Here we can see that the first five jobs have been given
+explicit names that makes it possible to uniquely identify them.
+
+
+
+\subsection*{A Look at the Datasets}
+The \texttt{dsinfo} command is a simple tool to list the most
+important aspects of a dataset.  It relies on the \texttt{gzutil}
+library, and since the \texttt{project\_skeleton} installs libraries
+locally in a virtual environment, we need to run
+\begin{shell2}
+source ../venv/py3/bin/activate
+\end{shell2}
+to have access to it.  Now we can use the \texttt{dsinfo} tool on the
+datasets.  Let's examine \texttt{TEST-4}, which is the last dataset in
+a chain
+\begin{shell2}
+./dsinfo.py TEST-4
+\end{shell2}
+this results in
+\begin{snugshade}
+\begin{Verbatim}[commandchars=\\\{\}]
+Parent: None
+Hashlabel: None
+Columns:
+    rflt  float64
+    rint  int64
+2 columns
+100,000 lines
+Chain length 5, from TEST-0 to TEST-4
+500,000 total lines
+\end{Verbatim}
+\end{snugshade}
+Which shows that we have 100.000 lines in \texttt{TEST-4}, and 500.000
+lines in the chain starting at \texttt{TEST-0}.  Furthermore, it has
+two columns, one floating point and one integer, and the dataset is
+not hashed.
+
+If we look at \texttt{TEST-10}, which is the dataset with a column
+appended to \texttt{TEST-7}, it looks like this
+\begin{snugshade}
+\begin{Verbatim}[commandchars=\\\{\}]
+Parent: TEST-7/default
+Hashlabel: None
+Columns:
+    prod  number
+    rflt  number
+    rint  number
+3 columns
+100,000 lines
+\end{Verbatim}
+\end{snugshade}
+Indeed, this dataset has a parent, \texttt{TEST-7/default}, and there
+are three columns, all typed to \texttt{number}.
+
+
+
+
 \end{document}
-
-
