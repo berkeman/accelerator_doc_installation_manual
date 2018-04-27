@@ -27,8 +27,10 @@
 
 \section*{Introduction and System Requirements}
 The \texttt{accelerator-project\_skeleton} project provides a simple
-and convenient way to install the Accelerator.  This document lists
-the necessary steps to set up the Accelerator using it.
+and convenient way to install the Accelerator locally.  This document
+lists the necessary steps to set up the Accelerator using it.  The
+last part of the document is dedicated to an example showing important
+Accelerator concepts.
 
 The Accelerator will run on almost any hardware, from small laptops to
 large multi-CPU rack servers.  It is assumed in this manual that the
@@ -47,8 +49,8 @@ are met.  This command will install all required packages
 \begin{shell}
 sudo apt-get install build-essential python-dev python3-dev zlib1g-dev git virtualenv
 \end{shell}
-The installer requires nothing but \texttt{git}, \texttt{virtualenv},
-and some \texttt{dev} packages in order to compile C-code.
+The installer requires only \texttt{git}, \texttt{virtualenv}, and
+some \texttt{dev} packages in order to compile C-code.
 
 \subsection*{2. Clone Repository}
 Clone the \texttt{accelerator-project\_skeleton} like this
@@ -70,8 +72,8 @@ before continuing.  The next step is to run the script
 \begin{shell}
 ./init.py
 \end{shell}
-This script will do a complete setup, and the next section provides
-more information about the process.  After the script is finished, the
+This will do a complete setup, and the next section provides more
+information about the process.  After the script is finished, the
 Accelerator installation is complete.  It could be run by issuing
 \begin{shell}
 cd accelerator
@@ -84,7 +86,7 @@ complete.  \thispagestyle{empty}
 
 \section*{Accessing Libraries in the Virtual Environment}
 Since the installer uses a virtual environment for installing
-packages, it must be initiated in shells running for example
+packages, it must be initiated in all shells running for example
 \texttt{dsinfo}.  This is done by issuing
 \begin{shell}
 source ../venv/py3/bin/activate
@@ -115,7 +117,7 @@ Accelerator User's Reference Manual.
 
 
 \clearpage
-\section*{Example 1}
+\section*{Example 1:  Dataset Operations}
 This example shows how to create datasets and dataset chains, export
 datasets to CSV (Comma Separated Values) files, import datasets from
 CSV-files, append columns to datasets, and more.
@@ -281,7 +283,7 @@ Chain length 5, from TEST-0 to TEST-4
 500,000 total lines
 \end{Verbatim}
 \end{snugshade}
-Which shows that we have 100.000 lines in \texttt{TEST-4}, and 500.000
+\noindent which shows that we have 100.000 lines in \texttt{TEST-4}, and 500.000
 lines in the chain starting at \texttt{TEST-0}.  Furthermore, it has
 two columns, one floating point and one integer, and the dataset is
 not hashed.
@@ -300,7 +302,7 @@ Columns:
 100,000 lines
 \end{Verbatim}
 \end{snugshade}
-Indeed, this dataset has a parent, \texttt{TEST-7/default}, and there
+\noindent Indeed, this dataset has a parent, \texttt{TEST-7/default}, and there
 are three columns, all typed to \texttt{number}.
 Similarly, it is worth looking at the imported dataset \texttt{TEST-6} too.
 
