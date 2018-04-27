@@ -128,30 +128,10 @@ list of steps showing how to run it:
 
 \begin{enumerate}
 \item Clone and setup the \texttt{project\_skeleton} as described
-  earlier in this document.  First
+  earlier in this document
 \begin{shell}
 git clone https://github.com/eBay/accelerator-project_skeleton.git
 cd accelerator-project_skeleton
-\end{shell}
-
-\item The example code is by default not visible to the Accelerator,
-  and this is controlled by the Accelerator's configuration file.
-  Since the \texttt{init.py} script generates this file, we can edit
-  \texttt{init.py} before running it.  Here we use the \texttt{vim}
-  editor
-\begin{shell}
-vim init.py
-\end{shell}
-  and update the \texttt{method\_directories} line so it looks like this
-\begin{snugshade}
-\begin{Verbatim}[commandchars=\\\{\}]
-# Methods are imported from these directories (comma separated)
-method_directories=dev,standard_methods,\textsl{example1}
-\end{Verbatim}
-\end{snugshade}
-
-\item After updating the init script, we can run it to set up the environment
-\begin{shell}
 ./init.py
 \end{shell}
 
@@ -163,7 +143,7 @@ cd accelerator
   This terminal is now our \textsl{server} terminal, displaying the
   Accelerator's \texttt{stdout} and \texttt{stderr}.
   
-\item Now open a second terminal emulator for the \textsl{client}
+\item Next, open a second terminal emulator for the \textsl{client}
   side.  The Accelerator team prefers using GNU screen, but any
   terminal emulator like \texttt{xterm} is fine.
 
@@ -206,16 +186,16 @@ example1.automata_example1
 run, and their jobids are \texttt{TEST-0} to \texttt{TEST-4}.  By
 looking at the code, we see that the \texttt{csvexport} job is
 exporting the \textsl{last} (\texttt{TEST-4}) dataset to a CSV file on
-disk.  (The whole dataset chain could be exported to CVS too by simply
+disk.  (The whole dataset chain could be exported to CSV too by simply
 changing an input parameter to \texttt{csvimport}.) The location of
-this file is printed to \texttt{stdout} as well.  Let's move on
+this file is printed to \texttt{stdout} as well.  We move on to
 \begin{snugshade}
 \begin{Verbatim}[commandchars=\\\{\}]
         -  csvimport                                      DONE  TEST-6  0.2 seconds
         -  dataset_type                                   DONE  TEST-7  0.2 seconds
 \end{Verbatim}
 \end{snugshade}
-\noindent Here, we've \textsl{imported} the CVS-file we just created.  Note
+\noindent Here, we've \textsl{imported} the CSV-file we just created.  Note
 that an import types the data to \texttt{bytes}, so we issue an
 \texttt{dataset\_type} job that does proper typing of the data.  Next,
 \begin{snugshade}
