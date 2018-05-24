@@ -7,21 +7,22 @@
 \setlength{\textheight}{250mm}
 \setlength{\voffset}{-20mm}
 %\usepackage{showframe}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{fancyvrb}
 \usepackage{xspace}
 \usepackage{minted, xcolor}
 \definecolor{bg_shell}{rgb}{0.95,0.95,1.00}
 \definecolor{bg_shell2}{rgb}{0.95,1.00,0.95}
 \definecolor{shadecolor}{rgb}{0.96,0.96,0.96}
-
 \newminted[shell]{bash}{bgcolor=bg_shell}
 \newminted[shell2]{bash}{bgcolor=bg_shell2}
+\newcommand{\pyTrue}{\mintinline{python}/True/\xspace}
+\newcommand{\pyFalse}{\mintinline{python}/False/\xspace}
 
 
-
-\usepackage{fancyvrb}
-
-\title{\vspace{-20mm}Expertmaker Accelerator\\[1ex]\Large{Quick Install using the ``Project Skeleton'' Repository + Example}}
-\date{}
+\title{\vspace{-20mm}Expertmaker Accelerator\\[1ex]\Large{Quick Install using the ``Project Skeleton'' Repository + Examples}}
+\date{v2, 2018-05-25, Added performance example.  See page 6.}
 \begin{document}
 \maketitle
 
@@ -29,7 +30,7 @@
 The \texttt{accelerator-project\_skeleton} project provides a simple
 and convenient way to install the Accelerator locally.  This document
 lists the necessary steps to set up the Accelerator using it.  The
-last part of the document is dedicated to an example showing important
+last part of the document is dedicated to examples showing important
 Accelerator concepts.
 
 The Accelerator will run on almost any hardware, from small laptops to
@@ -40,8 +41,8 @@ Accelerator will most likely run on many other Linux distributions as well.
 
 
 \section*{Installation}
-There are three steps in the installation: resolve dependencies, clone
-repository, and run the initiation script.  These steps will be
+There are three steps in the installation: \textsl{resolve dependencies}, \textsl{clone
+repository}, and \textsl{run the initiation script}.  These steps will be
 described next.
 \subsection*{1. Dependencies}
 The first step is to make sure that all software package dependencies
@@ -111,6 +112,10 @@ Accelerator User's Reference Manual.
 
 
 \vfill
+\subsection*{Acknowledgments}
+Thanks to Stefan H{\aa}konsson for suggestions, testing, and proof reading.
+
+
 \section*{References}
 \texttt{https://berkeman.github.io/pdf/acc\_manual.pdf}
 
@@ -144,7 +149,7 @@ cd accelerator
   Accelerator's \texttt{stdout} and \texttt{stderr}.
   
 \item Next, open a second terminal emulator for the \textsl{client}
-  side.  The Accelerator team prefers using GNU screen, but any
+  side.  The Accelerator team prefers using GNU \texttt{screen}, but any
   terminal emulator like \texttt{xterm} is fine.
 
   In this second terminal (green), \texttt{cd} to the
@@ -300,9 +305,200 @@ the Accelerator and maybe use it in future projects.
 
 
 
-\vfill
-\subsection*{Acknowledgements}
-Thanks to Stefan H{\aa}konsson for suggestions, testing, and proof reading.
+\clearpage
+\section*{Example 2:  Performance Measurement}
+
+\begin{figure}[h]\centering
+  \input{figures/example_perf.pdftex_t}
+  \label{fig:ex2}
+\end{figure}
+
+This example will create one billion lines of random data that will be
+used in a set of computations.  By looking at the execution times,
+stored by default by the Accelerator, the example can be used as a
+simple performance measurement of a machine.  The size of the dataset
+is an input parameter, and by default, a much smaller set of data is
+created in order to save space and time.  At the end of the chapter,
+we present some quite impressive results.
+
+\subsection*{Example Data Flow}
+The figure above shows the data flow in the example.  The following happens
+\begin{enumerate}
+\item[1.] The example starts by creating 100 chained datasets, each
+  one containing 10 millon lines.  (It is possible to change the input
+  options to have a smaller or larger example, as will be shown
+  later.)  The datasets will have the following columns
+  \begin{snugshade}
+  \noindent\begin{tabular}{@{}p{3.0cm}p{2cm}p{8.5cm}}\hline\\[-1ex]
+  \textbf{name} & \textbf{type} & \textbf{description}\\[1ex]
+  \hline\\[-0.5ex]
+  \texttt{a string}      & \texttt{ascii}   & a short random string, 10 characters long\\
+  \texttt{large number}  & \texttt{number}  & an integer evenly spread in the range [-1e20, 1e20] \\
+  \texttt{small number}  & \texttt{number}  & an integer evenly spread in the range [-99, 99]\\
+  \texttt{small integer} & \texttt{int32}   & the same integer as in the previous column\\
+  \texttt{gauss number}  & \texttt{number}  & a gaussian distribution around 0 with stddev 1\\
+  \texttt{gauss float}   & \texttt{float64} & the same float as the previous column\\[1ex]
+  \hline
+  \end{tabular}
+  \end{snugshade}
+  Stored as a CSV-file, this corresponds to on average 79 bytes per
+  line.
+    
+  \item[2.] The complete dataset chain will be exported to a
+    compressed text file in Comma Separated Values (CSV)-format.  A
+    one billion line CVS file is about 36GiB compressed and 79GiB
+    uncompressed.
+
+
+    
+  \item[3.] The previously stored CSV file is imported again into a
+    single dataset.  Note that the import job will find and name the
+    columns, and type all data to the \texttt{bytes} type.
+
+  \item[4.] The imported dataset is typed, i.e.\ the data is written
+    to disk in a more efficient format and meta information about the
+    types is attached.
+
+  \item[5.]  Finally, a number of operations are performed on the
+    individual columns.  The operation are
+    \begin{itemize}
+    \item[A.] Sum all values of the column.
+    \item[B.] Sum all positive values of the column, by telling the
+      iterator using the \texttt{range}-argument, only to output
+      positive values.
+    \item[C.] Create histograms of the column's data.
+    \item[D.] Find a substring ``\texttt{eBay}'' in the string column
+      and count number of matching lines.
+
+    \end{itemize}
+
+\end{enumerate}
+
+
+\subsection*{Running the Example}
+The example is located in the \texttt{example\_perf} directory.  Here
+is a list of steps showing how to run it:
+
+\begin{enumerate}
+\item Clone and setup the \texttt{project\_skeleton} as described
+  earlier in this document
+\begin{shell}
+git clone https://github.com/eBay/accelerator-project_skeleton.git
+cd accelerator-project_skeleton
+./init.py
+\end{shell}
+
+\item Now we can start the Accelerator.  To start the server type
+  \begin{shell}
+cd accelerator
+./daemon.py
+  \end{shell}
+  This terminal is now our \textsl{server} terminal, displaying the
+  Accelerator's \texttt{stdout} and \texttt{stderr}.
+  
+\item Next, open a second terminal emulator for the \textsl{client}
+  side.  The Accelerator team prefers using GNU \texttt{screen}, but any
+  terminal emulator like \texttt{xterm} is fine.
+
+  In this second terminal (green), \texttt{cd} to the
+  \texttt{accelerator} directory
+\begin{shell2}
+cd accelerator
+\end{shell2}
+Since the installation is local (no administration privileges used),
+using virtual environments, we need to set up the virtual environment
+in this terminal like this
+\begin{shell2}
+source ../venv/py3/bin/activate
+\end{shell2}
+Now we can run the the build script.
+\begin{shell2}
+./automatarunner -P example_perf
+\end{shell2}
+Please read the section below on the dataset size.  Also note that all
+generated data will by default be stored in the home directory, which
+is probably not a good idea in most cases.  Change this by editing
+the \texttt{workdir} assignment in \texttt{conf/framework.conf}.
+\item Just for show.  Try running the build script again.  The
+  Accelerator will instantaneously return the jobids to all the
+  previously built jobs, and all statistics will be printed
+  immediately.  Thus, there is full tracking of each jobs result as
+  well as input source data.  Changing one or the jobs or adding new
+  jobs will not cause earlier jobs to be rebuilt.  It is easy to see
+  how this speeds up development while minimising the risk of mixing
+  up results, code, and data.  Try change something in, for example,
+  \texttt{perf/a\_example\_histogram.py}, run again and see what
+  happens!
+\end{enumerate}
+
+
+\subsection*{Changing the Dataset Size}
+By default, the size of the example is 10 million lines, partitioned
+into 10 datasets of one million lines each.  Changing the
+\texttt{if}-statement early in \texttt{example\_perf/automata.py} from
+\pyFalse to \pyTrue will expand the example 100 times, to 1.000
+million lines, by creating 100 datasets of 10 million lines each.
+Please note that this may take significant time (hours, depending on
+hardware) and about 140GB disk space.
+
+
+
+\clearpage
+\subsection*{Results and Discussion}
+The results from running on a fast\footnote{Quad ``Intel(R) Xeon(R)
+  CPU E7-8867 v4 @ 2.40GHz'', 1TB RAM, and fast SSD storage} computer
+is shown below
+\begin{snugshade}
+\begin{verbatim}
+operation                       exec time             rows/s
+
+csvexport                         137.554          7,269,894
+
+reimport total                    858.423          1,164,927
+   csvimport                      789.486          1,266,647
+   type                            68.937         14,506,058
+
+sum
+  small number                      0.888      1,125,883,677
+  small integer                     0.788      1,268,766,645
+  large number                      2.255        443,412,451
+  gauss number                      1.228        814,623,313
+  gauss float                       1.029        971,384,899
+
+sum positive
+  small number                      2.673        374,090,817
+  small integer                     2.757        362,721,065
+  large number                      4.007        249,547,171
+  gauss number                      3.500        285,714,052
+  gauss float                       3.179        314,543,272
+
+histogram
+  number                            9.312        107,392,457
+  float                             8.884        112,557,854
+
+find string                        16.628         60,139,367
+
+Total test time                  1337.014
+
+Example size is 1,000,000,000 lines.
+\end{verbatim}
+\end{snugshade}
+
+On a high level, it seems we can
+\begin{itemize}
+\item Sum almost one billion ($10^9$) 64-bit floats per second.  (Or
+  almost 1.3 billion 32-bit ints per second.)
+\item Create a binned histogram of approximately 100 million floats or
+  integers per second.
+\item Find the number of strings (out of one billion) containing a specified substring in 17 seconds.
+\end{itemize}
+All this assuming that the data is imported by the Accelerator first.
+Importing the 79GiB CSV file into six columns takes less than 15
+minutes (858 seconds).  Furthermore, this import is only carried out
+once.  New or modified analysis jobs will just use the existing import
+job.  So, for example, if we change the binning of a histogram, it
+will take less than 10 seconds to get the new result.
+
 
 
 
