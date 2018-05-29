@@ -88,7 +88,7 @@ complete.
 \section*{Accessing Libraries in the Virtual Environment}
 Since the installer uses a virtual environment for installing
 packages, it must be initiated in all shells running for example
-\texttt{dsinfo}.  This is done by issuing
+\texttt{automatarunner} or \texttt{dsinfo}.  This is done by issuing
 \begin{shell}
 source ../venv/py3/bin/activate
 \end{shell}
@@ -96,14 +96,14 @@ from the \texttt{accelerator} directory.
 
 
 
-\section*{Overview of the Installation}
+\section*{The Installation in more Detail}
 The \texttt{accelerator-project\_skeleton} script \texttt{init.py}
-will setup virtual environments for Python2 and Python3.  In these
-virtual environments, it will download and install some depending
-packages, and \texttt{git clone} and install the
-\texttt{accelerator-gzutil} library.  The Accelerator itself is
-\texttt{git clone}d into a git submodule in the \texttt{accelerator}
-directory.
+will setup virtual environments for Python2 and Python3 using
+\texttt{virtualenv}.  In these virtual environments, it will download
+and install some depending packages, and \texttt{git clone} and
+install the \texttt{accelerator-gzutil} library.  The Accelerator
+itself is \texttt{git clone}d into a git submodule in the
+\texttt{accelerator} directory.
 
 The default configuration file is located in
 \texttt{conf/framework.conf}.  This file is used to specify workdirs,
@@ -141,10 +141,10 @@ we present some quite impressive results.
 \subsection*{Example Data Flow}
 The figure above shows the data flow in the example.  The following happens
 \begin{enumerate}
-\item[1.] The example starts by creating 100 chained datasets, each
-  one containing 10 millon lines.  (It is possible to change the input
-  options to have a smaller or larger example, as will be shown
-  later.)  The datasets will have the following columns
+\item[(1)] The example starts by creating 100 chained datasets, each
+  one containing 10 millon lines.  (Default setting is actually only
+  1\% of this, see section on changing dataset size.)  The datasets
+  will have the following columns
   \begin{snugshade}
   \noindent\begin{tabular}{@{}p{3.0cm}p{2cm}p{8.5cm}}\hline\\[-1ex]
   \textbf{name} & \textbf{type} & \textbf{description}\\[1ex]
@@ -161,25 +161,24 @@ The figure above shows the data flow in the example.  The following happens
   Stored as a CSV (Comma Separated Values) file, this corresponds to
   79 bytes per line on average.
     
-  \item[2.] The complete dataset chain will be exported to a
+  \item[(2)] The complete dataset chain will be exported to a
     compressed text file in CSV-format.  A one billion line CVS file
     is about 36GiB compressed and 79GiB uncompressed.
     
-  \item[3.] The previously stored CSV file is imported again into a
+  \item[(3)] The previously stored CSV file is imported again into a
     single dataset.  Note that the import job will find and name the
     columns, and type all data to the \texttt{bytes} type.
 
-  \item[4.] The imported dataset is typed, i.e.\ the data is written
+  \item[(4)] The imported dataset is typed, i.e.\ the data is written
     to disk in a more efficient format together with meta information
     such as \texttt{min} and \texttt{max} values.
     
-  \item[5.]  Finally, a number of operations are performed on the
+  \item[(5)]  Finally, a number of operations are performed on the
     individual columns.  The operation are
     \begin{itemize}
     \item[A.] Sum all values of the column.
-    \item[B.] Sum all \textsl{positive} values of the column, by
-      telling the iterator, using the \texttt{range}-argument, to only
-      output positive values.
+    \item[B.] Sum all \textsl{positive} values of the column.
+      Implemented using the iterator's \texttt{range}-argument.
     \item[C.] Create histograms of the column's data.
     \item[D.] Find a substring ``\texttt{eBay}'' in the string column
       and count number of matching lines.
@@ -306,11 +305,12 @@ On a high level, it seems we can
   almost 1.3 billion 32-bit ints per second.)
 \item Create a binned histogram of 100 million floats or integers per
   second.
-\item Find the number of strings (out of one billion) containing a specified substring in 17 seconds.
+\item Find the number of strings (out of one billion) containing a
+  specified substring in less than 3 seconds.
 \end{itemize}
 All this assuming that the data is imported by the Accelerator first.
 Importing the 79GiB CSV file into a six column dataset takes less than
-15 minutes (858 seconds).  Furthermore, this import is only carried
+15 minutes (866 seconds).  Furthermore, this import is only carried
 out once.  New or modified analysis jobs will use the existing import
 job.  So, for example, if we change the binning of a histogram, it
 will take less than 10 seconds to get the new result.
