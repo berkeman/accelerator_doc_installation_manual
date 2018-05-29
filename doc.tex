@@ -266,35 +266,35 @@ The results from running on a fast\footnote{Quad ``Intel(R) Xeon(R)
 is shown below
 \begin{snugshade}
 \begin{verbatim}
-operation                       exec time             rows/s
+operation                       exec time         rows/s
 
-csvexport                         137.554          7,269,894
+csvexport                         140.405      7,122,267
 
-reimport total                    858.423          1,164,927
-   csvimport                      789.486          1,266,647
-   type                            68.937         14,506,058
+reimport total                    865.740      1,155,081
+   csvimport                      793.695      1,259,930
+   type                            72.045     13,880,208
 
 sum
-  small number                      0.888      1,125,883,677
-  small integer                     0.788      1,268,766,645
-  large number                      2.255        443,412,451
-  gauss number                      1.228        814,623,313
-  gauss float                       1.029        971,384,899
+  small number                      0.900  1,110,709,359
+  small integer                     0.776  1,288,260,784
+  large number                      2.158    463,384,710
+  gauss number                      1.203    830,964,312
+  gauss float                       1.100    909,130,792
 
 sum positive
-  small number                      2.673        374,090,817
-  small integer                     2.757        362,721,065
-  large number                      4.007        249,547,171
-  gauss number                      3.500        285,714,052
-  gauss float                       3.179        314,543,272
+  small number                      2.677    373,517,282
+  small integer                     2.839    352,187,637
+  large number                      3.658    273,371,843
+  gauss number                      3.551    281,607,174
+  gauss float                       3.425    291,951,520
 
 histogram
-  number                            9.312        107,392,457
-  float                             8.884        112,557,854
+  number                            9.399    106,398,284
+  float                             9.444    105,882,626
 
-find string                        16.628         60,139,367
+find string                         2.662    375,653,405
 
-Total test time                  1337.014
+Total test time                  1337.193
 
 Example size is 1,000,000,000 lines.
 \end{verbatim}
