@@ -11,12 +11,19 @@
 \usepackage{framed}
 \usepackage{fancyvrb}
 \usepackage{xspace}
+
 \usepackage{minted, xcolor}
+\usemintedstyle{lovelace}
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
 \definecolor{bg_shell}{rgb}{0.95,0.95,1.00}
 \definecolor{bg_shell2}{rgb}{0.95,1.00,0.95}
-\definecolor{shadecolor}{rgb}{0.96,0.96,0.96}
+\definecolor{shadecolor}{rgb}{0.96,0.96,0.96} % for snugshade
+\newminted[python]{python}{bgcolor=bg}
 \newminted[shell]{bash}{bgcolor=bg_shell}
 \newminted[shell2]{bash}{bgcolor=bg_shell2}
+
+
+
 \newcommand{\pyTrue}{\mintinline{python}/True/\xspace}
 \newcommand{\pyFalse}{\mintinline{python}/False/\xspace}
 
@@ -122,7 +129,7 @@ Thanks to Stefan H{\aa}konsson for suggestions, testing, and proof reading.
 
 
 \clearpage
-\section*{Example:  Dataset Performance Measurement}
+\section{Example:  Dataset Performance Measurement}
 \label{example:datasetperf}
 
 \begin{figure}[h]\centering
@@ -325,7 +332,54 @@ will take less than 10 seconds to get the new result.
 
 
 \clearpage
-\section*{Example:  Dataset Operations}
+\section{Example:  Miscellaneous Functions}
+The \texttt{example\_misc} directory contains some minimal examples
+illustrating interesting topics.  This directory will likely be
+expanded over time.
+\subsection*{Sujobtest}
+This example builds a job that itself builds a subjob.  The subjob
+creates a small dataset.  Now, this dataset is not available to the
+build script, since subjobs are not ``seen'' by the \texttt{urd}
+object.  (We can verify this by adding
+\begin{python}
+print(urd.joblist.pretty)
+\end{python}
+at the end of the build script, and see that the subjob is not
+included in the list.)  The situation is solved by linking the
+subjob's dataset to the job that issued the subjob build.  This is
+done using the
+\begin{python}
+  Dataset.link_to_here()
+\end{python}
+function.
+
+The example is run by typing
+\begin{shell}
+./automatarunner automata_misc_subjobtest
+\end{shell}
+Don't forget to have a look at the output in both the \textsl{server}
+terminal too.
+
+
+\subsection*{Jsontest}
+This example illustrates how the \texttt{json} dataset type can be
+used to store more complex objects like \texttt{dict}s, \texttt{list}s
+and combinations thereof.
+
+\begin{shell}
+./automatarunner automata_misc_jsontest
+\end{shell}
+
+
+
+
+
+
+
+
+
+\clearpage
+\section{Example:  Dataset Operations}
 
 This example shows how to create datasets and dataset chains, export
 datasets to CSV (Comma Separated Values) files, import datasets from
